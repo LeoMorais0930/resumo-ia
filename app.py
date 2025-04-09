@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request
 from transformers import pipeline
 
-# Inicializa o Flask
 app = Flask(__name__)
 
-# Inicializa o pipeline de resumo utilizando o modelo do Facebook BART.
+# Inicializa o pipeline de resumo utilizando o modelo do BART.
 summarizer = pipeline(
     "summarization",
     model="facebook/bart-large-cnn",
@@ -13,7 +12,7 @@ summarizer = pipeline(
 
 @app.route("/")
 def home():
-    # Renderiza a página inicial sem texto pré-preenchido
+    # Renderiza a página inicial sem texto 
     return render_template("index.html", texto="", resumo="", erro="")
 
 @app.route("/resumo", methods=["POST"])
@@ -28,18 +27,17 @@ def gerar_resumo():
     try:
         # Parâmetros para o resumo detalhado (mais contexto, mas ainda resumido)
         min_length, max_length = 150, 300
-        do_sample = False  # Garante consistência e precisão.
+        do_sample = False  
 
         # Se o texto for muito grande, utiliza o processo de chunking.
         words = texto.split()
-        threshold_word_count = 700  # Se o texto tiver mais que 700 palavras, divide-o em partes.
+        threshold_word_count = 700  
         if len(words) > threshold_word_count:
-            # Divide o texto em chunks baseando-se em sentenças.
             sentences = texto.split(". ")
             chunks = []
             current_chunk = ""
             current_chunk_words = 0
-            max_chunk_words = 600  # Evita ultrapassar o limite de palavras do chunk.
+            max_chunk_words = 600  
 
             for sentence in sentences:
                 sentence_with_period = sentence if sentence.endswith(".") else sentence + "."
@@ -80,7 +78,7 @@ def gerar_resumo():
             else:
                 final_summary = combined_summary
         else:
-            # Se o texto não for tão grande, processa-o diretamente.
+            # Se o texto não for tão grande, processa diretamente.
             summary = summarizer(
                 texto,
                 max_length=max_length,
