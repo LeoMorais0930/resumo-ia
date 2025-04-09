@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resumir Texto</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <h1>Resumir Texto</h1>
+  <form id="resumo-form" action="/resumo" method="post">
+    <textarea name="texto" id="texto" placeholder="Cole o texto aqui">{{ texto }}</textarea>
+    <div class="button-group">
+      <!-- Apenas um botão para resumir, usando a funcionalidade de resumo completo -->
+      <button type="submit" onclick="limparResumo()">Resumir</button>
+    </div>
+  </form>
+
+  <div id="resultado">
+    <h3>Resumo:</h3>
+    <p id="resumo-texto">{{ resumo }}</p>
+  </div>
+
+  {% if erro %}
+  <div class="erro">
+    <p>{{ erro }}</p>
+  </div>
+  {% endif %}
+
+  <!-- Sobreposição de carregamento -->
+  <div id="carregando" class="overlay">
+    <img src="/static/loading.gif" alt="Carregando...">
+    <p>Carregando...</p>
+  </div>
+
+  <script>
+    document.getElementById("resumo-form").onsubmit = function () {
+      document.getElementById("carregando").style.display = "flex";
+    };
+
+    // Função para limpar o resumo atual, de forma que o resumo novo não se misture com o anterior
+    function limparResumo() {
+      document.getElementById("resumo-texto").innerText = "";
+    }
+  </script>
+</body>
+</html>
